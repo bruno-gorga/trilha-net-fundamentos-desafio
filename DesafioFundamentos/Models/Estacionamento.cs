@@ -1,67 +1,120 @@
+using Npgsql;
+using System.Threading;
+
+
 namespace DesafioFundamentos.Models
 {
+
     public class Estacionamento
     {
-        private decimal precoInicial = 0;
-        private decimal precoPorHora = 0;
-        private List<string> veiculos = new List<string>();
+        public string construtorDeConexao="Host=localhost;Username=postgres;Password=admin;Database=sistema_estacionamento";
 
-        public Estacionamento(decimal precoInicial, decimal precoPorHora)
-        {
-            this.precoInicial = precoInicial;
-            this.precoPorHora = precoPorHora;
+        Dictionary<string, decimal> valorFinal = new Dictionary<string, decimal>();
+
+        public void ConectarAoBancoDeDados()
+        {   
+            // Testando conexão com o banco de dados
+            Console.WriteLine("Carregando banco de dados...");
+            using var conexao = new NpgsqlConnection(construtorDeConexao);
+            conexao.Open();
+
+            Thread.Sleep(5);
+
+            Console.WriteLine("Banco de dados carregado!");
+
         }
 
+        public void CriarTabela()
+        {
+            using var conexao = new NpgsqlConnection(construtorDeConexao);
+            conexao.Open();
+
+            using var comando = new NpgsqlCommand();
+            comando.Connection = conexao;
+
+            comando.CommandText = "DROP TABLE IF EXISTS carros";
+            comando.ExecuteNonQuery();
+
+            comando.CommandText = @"CREATE TABLE carros(id SERIAL PRIMARY KEY,
+                                    placa VARCHAR(10), cor VARCHAR(10), ano VARCHAR(10), marca VARCHAR(10))";
+            comando.ExecuteNonQuery();
+        }
+        
         public void AdicionarVeiculo()
         {
-            // TODO: Pedir para o usuário digitar uma placa (ReadLine) e adicionar na lista "veiculos"
-            // *IMPLEMENTE AQUI*
-            Console.WriteLine("Digite a placa do veículo para estacionar:");
+
+            decimal precoInicial;
+
+            using var conexao = new NpgsqlConnection(construtorDeConexao);
+            conexao.Open();
+
+            using var comando = new NpgsqlCommand();
+            comando.Connection = conexao;
+
+            Console.WriteLine("Digite a placa do carro: ");
+            string placa = Console.ReadLine();
+
+            Console.WriteLine("Digite a cor do carro: ");
+            string cor = Console.ReadLine();
+
+            Console.WriteLine("Digite o ano do carro: ");
+            string ano = Console.ReadLine();
+
+            Console.WriteLine("Digite a marca do carro: ");
+            string marca = Console.ReadLine();
+
+            Console.WriteLine("Digite o preço inicial: ");
+            precoInicial = Convert.ToDecimal(Console.ReadLine());
+
+            valorFinal.Add(placa, precoInicial);
+
+            
+            comando.CommandText = $"INSERT INTO carros (placa, cor, ano, marca) VALUES ('{placa}', '{cor}', '{ano}', '{marca}')";
+            comando.ExecuteNonQuery();
         }
 
         public void RemoverVeiculo()
         {
-            Console.WriteLine("Digite a placa do veículo para remover:");
+            using var conexao = new NpgsqlConnection(construtorDeConexao);
+            conexao.Open();
 
-            // Pedir para o usuário digitar a placa e armazenar na variável placa
-            // *IMPLEMENTE AQUI*
-            string placa = "";
+            using var comando = new NpgsqlCommand();
+            comando.Connection = conexao;
 
-            // Verifica se o veículo existe
-            if (veiculos.Any(x => x.ToUpper() == placa.ToUpper()))
-            {
-                Console.WriteLine("Digite a quantidade de horas que o veículo permaneceu estacionado:");
+            Console.WriteLine("Digite a placa do veículo que deseja remover: ");
+            string placa = Console.ReadLine();
 
-                // TODO: Pedir para o usuário digitar a quantidade de horas que o veículo permaneceu estacionado,
-                // TODO: Realizar o seguinte cálculo: "precoInicial + precoPorHora * horas" para a variável valorTotal                
-                // *IMPLEMENTE AQUI*
-                int horas = 0;
-                decimal valorTotal = 0; 
+            Console.WriteLine("Digite o valor da hora: ");
+            decimal precoPorHora = Convert.ToDecimal(Console.ReadLine());
 
-                // TODO: Remover a placa digitada da lista de veículos
-                // *IMPLEMENTE AQUI*
+            Console.WriteLine("Digite a quantidade de horas que o carro ficou estacionado: ");
+            decimal horasEstacionado = Convert.ToDecimal(Console.ReadLine());
+            
+            decimal precoFinal = valorFinal[placa] + precoPorHora * horasEstacionado;
+            Console.WriteLine($"O carro foi liberado pelo valor de R$ {precoFinal}"); 
 
-                Console.WriteLine($"O veículo {placa} foi removido e o preço total foi de: R$ {valorTotal}");
-            }
-            else
-            {
-                Console.WriteLine("Desculpe, esse veículo não está estacionado aqui. Confira se digitou a placa corretamente");
-            }
+            comando.CommandText = $"DELETE FROM carros WHERE placa='{placa}'";
+            comando.ExecuteNonQuery();
         }
 
         public void ListarVeiculos()
         {
-            // Verifica se há veículos no estacionamento
-            if (veiculos.Any())
+            using var conexao = new NpgsqlConnection(construtorDeConexao);
+            conexao.Open();
+
+            string comandoSQL = "SELECT * FROM carros";
+            using var comando = new NpgsqlCommand(comandoSQL, conexao);
+            
+            using NpgsqlDataReader leitorDeDados = comando.ExecuteReader();
+
+
+            Console.WriteLine("id |   placa   |   cor   |   ano   | marca");
+            while (leitorDeDados.Read())
             {
-                Console.WriteLine("Os veículos estacionados são:");
-                // TODO: Realizar um laço de repetição, exibindo os veículos estacionados
-                // *IMPLEMENTE AQUI*
+                    Console.WriteLine("{0}     {1}     {2}    {3}    {4}", leitorDeDados[0], leitorDeDados[1], leitorDeDados[2], leitorDeDados[3], leitorDeDados[4]);
             }
-            else
-            {
-                Console.WriteLine("Não há veículos estacionados.");
-            }
+
+
         }
     }
 }
