@@ -58,9 +58,10 @@ O programa faz uso de um banco de dados criado no SGBD PostgreSQL. Primeiramente
   
 ![](https://imgur.com/s5wCxPp.png)
 * Aguarde até o instalador executar:
-* 
+  
 ![](https://imgur.com/slpyZ3v.png)
-* Durente o processo de instalação, será solicitado ao usuário a criação de uma senha para a conta que irá gerenciar o banco de dados. **Crie a senha e guarde-a, pois será necessária para fazer o login no terminal do Postgre e para configurar nosso aplicativo de gerenciamento posteriormente.**
+
+* Durante o processo de instalação, será solicitado ao usuário a criação de uma senha para a conta que irá gerenciar o banco de dados. **Crie a senha e guarde-a, pois será necessária para fazer o login no terminal do Postgre e para configurar nosso aplicativo de gerenciamento posteriormente.**
   
 ![](https://imgur.com/gmo7mIP.png)
 
@@ -70,7 +71,7 @@ O programa faz uso de um banco de dados criado no SGBD PostgreSQL. Primeiramente
 
 * Confirme as pastas nas quais o instalador irá instalar o PostgreSQL e seus dados. No nosso exemplo vamos deixar os caminhos padrão.
   
-![](https://imgur.com/biZckOd.png)
+
 ![](https://imgur.com/lhTtzSR.png)
 ![](https://imgur.com/2JW2c8I.png)
 
@@ -151,14 +152,18 @@ Primeiramente, para adicionar um veículo, basta digitar a opção 1 no menu.
 O terminal então pedirá uma série de informações relacionadas ao veículo: Placa, cor, ano, marca e, também, qual o valor da hora inicial do estacionamento. Após isso, o veículo será inserido no banco de dados. 
 
 ![Inserindo veículo de placa ABC-0001](https://imgur.com/BqHXzPJ.png)
+
 ### 4.2.2 Listar Veículo
 Essa funcionalidade exibe no terminal os veículos que foram cadastrados no sistema. Para acessá-la, basta digitar a opção 3. Aqui, nós podemos consultar o terminal do PostgreSQL com um comando SELECT e veremos que, concomitantemente ao aplicativo em C#, os dados também foram armazenados no banco de dados Postgre, em uma tabela chamada "carros".
 ![Terminal do PostgreSQL ao lado do terminal VS Code. Vemos que os dados inseridos pelo aplicativo são gravados no banco de dados SQL.](https://imgur.com/UQ3bNXi.png)
+
 ### 4.2.3 Remover Veículo
 Para remover um veículo, insere-se o número 2. Aqui, o terminal pede o número da placa do veículo a ser removido, junto com o preço por hora do estacionamento e a quantidade de horas que o veículo ficou estacionado. Ao final, o veículo é liberado (removido do banco) e o valor total é exibido em tela.
 
 ![](https://imgur.com/RpZ50Qq.png)
+
 Pode-se ver também que o registro é apagado inclusive no banco de dados, no PostgreSQL. 
+
 ![Registro do carro com a placa ABC-0001 foi apagado da tabela carros no banco de dados.](https://imgur.com/u2EFp3k.png)
 
 ### 4.2.4 Encerrar programa
