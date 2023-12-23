@@ -58,7 +58,7 @@ O programa faz uso de um banco de dados criado no SGBD PostgreSQL. Primeiramente
   
 ![](https://imgur.com/s5wCxPp.png)
 * Aguarde até o instalador executar:
-  
+
 ![](https://imgur.com/slpyZ3v.png)
 
 * Durante o processo de instalação, será solicitado ao usuário a criação de uma senha para a conta que irá gerenciar o banco de dados. **Crie a senha e guarde-a, pois será necessária para fazer o login no terminal do Postgre e para configurar nosso aplicativo de gerenciamento posteriormente.**
